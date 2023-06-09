@@ -1,4 +1,5 @@
 <?php
+
 function connect()
 {
     $config = require 'config.php';
@@ -19,4 +20,5 @@ function connect()
         die('Connection failed: ' . $e->getMessage());
     }
 }
+
 ?>
