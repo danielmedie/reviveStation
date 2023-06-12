@@ -7,47 +7,7 @@
 <html>
 <head>
   <title>ReviveStation - Meny</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
-    
-    h1 {
-      text-align: center;
-      padding: 20px 0;
-    }
-    
-    h2 {
-      text-align: center;
-    }
-    
-    ul {
-      list-style: none;
-      padding: 0;
-      text-align: center;
-    }
-    
-    li {
-      margin: 10px 0;
-    }
-    
-    a {
-      display: block;
-      text-decoration: none;
-      background-color: #009688;
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-    
-    a:hover {
-      background-color: #008080;
-    }
-  </style>
+<link rel="stylesheet" href="css/index.css">
 </head>
 <body>
   <h1>Välkommen till ReviveStation</h1>

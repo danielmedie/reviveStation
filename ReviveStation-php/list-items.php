@@ -19,61 +19,7 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html>
 <head>
   <title>Plagglista</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 20px;
-    }
-
-    h1 {
-      color: #333;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
-    td input[type="checkbox"] {
-      transform: scale(1.5);
-    }
-
-    td a {
-      color: #333;
-      text-decoration: none;
-    }
-
-    td a:hover {
-      text-decoration: underline;
-    }
-
-    button[type="submit"] {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    button[type="submit"]:hover {
-      background-color: #45a049;
-    }
-  </style>
+  <link rel="stylesheet" href="css/list-item.css">
 </head>
 <body>
   <h1>Plagglista</h1>

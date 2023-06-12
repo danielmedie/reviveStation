@@ -28,53 +28,7 @@ if (isset($_GET['seller_id'])) {
 <html>
 <head>
     <title>Säljarinformation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        .seller-info {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        p {
-            margin: 0;
-            margin-bottom: 10px;
-        }
-
-        .back-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #ccc;
-            color: #fff;
-            border: none;
-            z-index: 1;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            text-decoration: none;
-            position: sticky;
-            top: 20px;
-            right: 20px;
-            float: right;
-        }
-
-        .back-button:hover {
-            background-color: #999;
-        }
-    </style>
+        <link rel="stylesheet" href="css/seller-info.css">
 </head>
 <body>
     <a class="back-button" href="list-sellers.php">Tillbaka</a>
@@ -84,6 +38,12 @@ if (isset($_GET['seller_id'])) {
         <p>Antal inlämnade plagg: <?php echo $seller['total_items_submitted']; ?> st</p>
         <p>Antal sålda plagg: <?php echo $seller['total_items_sold']; ?> st</p>
         <p>Totalt sålt för: <?php echo $seller['total_sales_amount']; ?> kr</p>
+        <!-- Lägg till knappen bredvid säljarens information -->
+<form action="delete-seller.php" method="POST">
+  <input type="hidden" name="seller_id" value="<?php echo $seller['seller_id']; ?>">
+  <button type="submit">Ta bort säljare</button>
+</form>
+
 
         <?php
         // Hämta alla plagg som säljaren lämnat in

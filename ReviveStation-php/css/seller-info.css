@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+.seller-info {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    margin-bottom: 20px;
+}
+
+p {
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ccc;
+    color: #fff;
+    border: none;
+    z-index: 1;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    position: sticky;
+    top: 20px;
+    right: 20px;
+    float: right;
+}
+
+.back-button:hover {
+    background-color: #999;
+}
