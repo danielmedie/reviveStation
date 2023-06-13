@@ -1,16 +1,15 @@
-<?php
-require 'partials/connect.php';
+<?php require 'partials/connect.php';
 
 $pdo = connect();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Hämtar data från formuläret
-    $name = $_POST['name'];
-    $sellerId = $_POST['seller'];
-    $price = $_POST['price'];
+    // Hämta data från formuläret och sanera dem
+    $name = sanitizeInput($_POST['name']);
+    $sellerId = sanitizeInput($_POST['seller']);
+    $price = sanitizeInput($_POST['price']);
 
     try {
-        //SQL-förfrågan för att lägga till data i databasen
+        // SQL-förfrågan för att lägga till data i databasen
         $stmt = $pdo->prepare("INSERT INTO items (name, seller_id, submitted_date, price) VALUES (?, ?, NOW(), ?)");
         $stmt->execute([$name, $sellerId, $price]);
 
@@ -20,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Hämtar alla säljare från databasen
+// Hämta alla säljare från databasen
 $stmt = $pdo->query("SELECT seller_id, name FROM sellers");
 $sellers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -51,5 +50,16 @@ $sellers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <button type="submit">Lägg till</button>
 </form>
+
+<?php
+// Sanera inmatad data
+function sanitizeInput($input)
+{
+    $sanitizedInput = trim($input);
+    $sanitizedInput = stripslashes($sanitizedInput);
+    $sanitizedInput = htmlspecialchars($sanitizedInput);
+    return $sanitizedInput;
+}
+?>
 </body>
 </html>
