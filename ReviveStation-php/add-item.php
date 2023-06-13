@@ -1,6 +1,8 @@
-<?php require 'partials/connect.php';
+<?php
+require 'partials/DatabaseConnection.php';
 
-$pdo = connect();
+$database = new DatabaseConnection();
+$pdo = $database->getPdo();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Hämta data från formuläret och sanera dem

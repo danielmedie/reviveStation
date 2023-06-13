@@ -1,80 +1,98 @@
 <?php
 require 'partials/connect.php';
 
-if (isset($_GET['seller_id'])) {
-    $seller_id = $_GET['seller_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['seller_id'])) {
+    $sellerId = $_GET['seller_id'];
 
-    // Hämta säljarens information
-    $pdo = connect();
-    $sellerStatement = $pdo->prepare("SELECT 
-        s.seller_id,
-        s.name,
-        COUNT(i.item_id) AS total_items_submitted,
-        SUM(i.sold) AS total_items_sold,
-        SUM(CASE WHEN i.sold = 1 THEN i.price ELSE 0 END) AS total_sales_amount
-    FROM sellers AS s
-    LEFT JOIN items AS i ON s.seller_id = i.seller_id
-    WHERE s.seller_id = :seller_id
-    GROUP BY s.seller_id");
-    $sellerStatement->bindParam(":seller_id", $seller_id);
-    $sellerStatement->execute();
+    try {
+        // Hämta säljarens information från sellers-tabellen
+        $stmt = $pdo->prepare("SELECT * FROM sellers WHERE seller_id = ?");
+        $stmt->execute([$sellerId]);
+        $seller = $stmt->fetch();
 
-    $seller = $sellerStatement->fetch(PDO::FETCH_ASSOC);
+        // Hämta antal inlämnade plagg
+        $stmt = $pdo->prepare("SELECT COUNT(*) AS total_items_submitted FROM items WHERE seller_id = ?");
+        $stmt->execute([$sellerId]);
+        $result = $stmt->fetch();
+        $totalItemsSubmitted = $result['total_items_submitted'];
 
-    if ($seller) {
+        // Hämta antal sålda plagg
+        $stmt = $pdo->prepare("SELECT COUNT(*) AS total_items_sold FROM items WHERE seller_id = ? AND sold = 1");
+        $stmt->execute([$sellerId]);
+        $result = $stmt->fetch();
+        $totalItemsSold = $result['total_items_sold'];
+
+        // Hämta total försäljning
+        $stmt = $pdo->prepare("SELECT SUM(price) AS total_sales_amount FROM items WHERE seller_id = ? AND sold = 1");
+        $stmt->execute([$sellerId]);
+        $result = $stmt->fetch();
+        $totalSalesAmount = $result['total_sales_amount'];
+
+        // Hämta plagg inlämnade av säljaren
+        $stmt = $pdo->prepare("SELECT * FROM items WHERE seller_id = ?");
+        $stmt->execute([$sellerId]);
+        $items = $stmt->fetchAll();
+    } catch (PDOException $e) {
+        die('Ett fel inträffade: ' . $e->getMessage());
+    }
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seller_id'])) {
+    $sellerId = $_POST['seller_id'];
+
+    try {
+        // Ta bort alla relaterade poster i items-tabellen för den aktuella säljaren
+        $stmtDeleteItems = $pdo->prepare("DELETE FROM items WHERE seller_id = ?");
+        $stmtDeleteItems->execute([$sellerId]);
+
+        // Ta bort säljaren från sellers-tabellen
+        $stmtDeleteSeller = $pdo->prepare("DELETE FROM sellers WHERE seller_id = ?");
+        $stmtDeleteSeller->execute([$sellerId]);
+
+        // Omdirigera till listan över säljare efter borttagning
+        header("Location: list-sellers.php");
+        exit();
+    } catch (PDOException $e) {
+        die('Ett fel inträffade: ' . $e->getMessage());
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Säljarinformation</title>
     <link rel="stylesheet" href="css/seller-info.css">
 </head>
 <body>
     <a class="back-button" href="list-sellers.php">Tillbaka</a>
-    <h1>Säljar ID <?php echo $seller['seller_id']; ?></h1>
+    <h1>Säljarinformation</h1>
+
     <div class="seller-info">
-        <h2>Namn: <?php echo $seller['name']; ?></h2>
-        <p>Antal inlämnade plagg: <?php echo $seller['total_items_submitted']; ?> st</p>
-        <p>Antal sålda plagg: <?php echo $seller['total_items_sold']; ?> st</p>
-        <p>Totalt sålt för: <?php echo $seller['total_sales_amount']; ?> kr</p>
-        <form action="delete-seller.php" method="POST">
+        <p><strong>Namn:</strong> <?php echo $seller['name']; ?></p>
+        <p><strong>Antal inlämnade plagg:</strong> <?php echo $totalItemsSubmitted; ?> st</p>
+        <p><strong>Antal sålda plagg:</strong> <?php echo $totalItemsSold; ?> st</p>
+        <p><strong>Totalt sålt för:</strong> <?php echo $totalSalesAmount; ?> kr</p>
+        <form method="POST" action="delete-seller.php">
             <input type="hidden" name="seller_id" value="<?php echo $seller['seller_id']; ?>">
             <button type="submit" class="delete-button">Ta bort säljare</button>
         </form>
-
-        <?php
-        // Hämtar alla plagg som säljaren lämnat in
-        $itemsStatement = $pdo->prepare("SELECT * FROM items WHERE seller_id = :seller_id");
-        $itemsStatement->bindParam(":seller_id", $seller_id);
-        $itemsStatement->execute();
-        $items = $itemsStatement->fetchAll(PDO::FETCH_ASSOC);
-
-        if (count($items) > 0) {
-            echo "<h3>Plagg inlämnade av " . $seller['name'] . "</h3>";
-             foreach ($items as $item): ?>
-                <div class="item-container">
-                    <p>Produkt ID: <?php echo $item['item_id']; ?></p>
-                    <p>Produkt namn: <?php echo $item['name']; ?></p>
-                    <p>Inlämmnat: <?php echo $item['submitted_date']; ?></p>
-                    <p>Såld: <?php echo ($item['sold'] ? 'Ja' : 'Nej'); ?></p>
-                    <p>Pris: <?php echo $item['price']; ?></p>
-                    <br>
-                </div>
-            <?php endforeach;
-        } else {
-            echo "<h3>Inga plagg inlämnade av " . $seller['name'] . "</h3>";
-        }
-        ?>
     </div>
+
+    <h2>Plagg inlämnade av <?php echo $seller['name']; ?>:</h2>
+
+    <?php if (isset($items) && count($items) > 0) : ?>
+        <?php foreach ($items as $item) : ?>
+            <div class="item-container">
+                <p><strong>Namn:</strong> <?php echo $item['name']; ?></p>
+                <p><strong>Item ID:</strong> <?php echo $item['item_id']; ?></p>
+                <p><strong>Inlämningsdatum:</strong> <?php echo $item['submitted_date']; ?></p>
+                <p><strong>Såld:</strong> <?php echo $item['sold'] ? 'Ja' : 'Nej'; ?></p>
+                <p><strong>Pris:</strong> <?php echo $item['price']; ?> kr</p>
+            </div>
+        <?php endforeach; ?>
+    <?php else : ?>
+        <p>Inga plagg inlämnade.</p>
+    <?php endif; ?>
+
 </body>
 </html>
-
-<?php
-    } else {
-        echo "<h1>Säljaren hittades inte.</h1>";
-    }
-} else {
-    echo "<h1>Inget säljar-ID angavs.</h1>";
-}
-?>

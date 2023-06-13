@@ -1,19 +1,33 @@
 <?php
-// require 'connect.php';
 require 'partials/connect.php';
 
+// Skapar en Seller-klass för att hantera säljare i databasen
+class Seller {
+    private $pdo;
+
+    public function __construct($pdo) {
+        $this->pdo = $pdo;
+    }
+
+    // Metod för att lägga till en säljare i databasen
+    public function addSeller($name) {
+        $stmt = $this->pdo->prepare("INSERT INTO sellers (name) VALUES (?)");
+        $stmt->execute([$name]);
+    }
+}
+
+// Skapar en instans av Seller-klassen och skickar med PDO-objektet
+$seller = new Seller($pdo);
+
+// Kontrollerar om förfrågan skickades med POST-metoden
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
-
-    // Validera och spara den nya säljaren i databasen
-    if (!empty($name)) {
-        $pdo = connect();
-        $stmt = $pdo->prepare('INSERT INTO sellers (name) VALUES (:name)');
-        $stmt->bindParam(':name', $name);
-        $stmt->execute();
-        header('Location: list-sellers.php');
-        exit;
-    }
+    
+    // Anropar addSeller-metoden för att lägga till säljaren i databasen
+    $seller->addSeller($name);
+    
+    // Visar ett meddelande efter att säljaren har lagts till
+    echo "Säljaren har lagts till!";
 }
 ?>
 
@@ -24,13 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="css/add-seller.css">
 </head>
 <body>
-    <a href="index.php" class="back-to-menu">Tillbaka till menyn</a>
+<a class="back-button" href="list-sellers.php">Tillbaka</a>
+
     <h1>Lägg till säljare</h1>
-    <form method="post">
-        <label for="name">Säljarens namn:</label>
-        <input type="text" id="name" name="name">
+    <form method="POST">
+        <label for="name">Namn:</label>
+        <input type="text" name="name" id="name" required>
         <button type="submit">Lägg till</button>
     </form>
-
 </body>
 </html>

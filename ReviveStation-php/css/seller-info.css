@@ -16,7 +16,6 @@ h1 {
     border-radius: 5px;
 }
 
-
 .seller-info {
     background-color: #fff;
     padding: 20px;
@@ -24,7 +23,7 @@ h1 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
     margin-bottom: 20px;
-    border: 1px solid #ccc; 
+    border: 1px solid #ccc;
 }
 
 p {
@@ -45,8 +44,6 @@ p {
     top: 20px;
     right: 20px;
 }
-
-
 
 .back-button:hover {
     background-color: #999;
