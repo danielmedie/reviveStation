@@ -24,7 +24,7 @@ h1 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
     margin-bottom: 20px;
-    border: 1px solid #ccc; /* Lägg till en border-stil */
+    border: 1px solid #ccc; 
 }
 
 p {
@@ -33,22 +33,20 @@ p {
 }
 
 .back-button {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
     padding: 10px 20px;
     background-color: #ccc;
     color: #fff;
     border: none;
-    z-index: 1;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
     text-decoration: none;
-    position: sticky;
+    position: fixed;
     top: 20px;
     right: 20px;
 }
+
+
 
 .back-button:hover {
     background-color: #999;
