@@ -33,7 +33,9 @@ p {
 }
 
 .back-button {
-    display: inline-block;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     padding: 10px 20px;
     background-color: #ccc;
     color: #fff;
@@ -46,7 +48,6 @@ p {
     position: sticky;
     top: 20px;
     right: 20px;
-    float: right;
 }
 
 .back-button:hover {
