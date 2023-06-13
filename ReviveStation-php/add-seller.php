@@ -21,13 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <title>Lägg till säljare</title>
+    <link rel="stylesheet" href="css/add-seller.css">
 </head>
 <body>
+    <a href="index.php" class="back-to-menu">Tillbaka till menyn</a>
     <h1>Lägg till säljare</h1>
     <form method="post">
         <label for="name">Säljarens namn:</label>
         <input type="text" id="name" name="name">
         <button type="submit">Lägg till</button>
     </form>
+
 </body>
 </html>

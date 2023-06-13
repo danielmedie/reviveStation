@@ -4,6 +4,8 @@ require 'partials/connect.php';
 $pdo = new PDO('mysql:host=localhost;dbname=revivestation;charset=utf8', 'root', 'abc123');
 
 // Kontrollera om formuläret har skickats för att uppdatera information
+
+// Tar bort
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['delete'])) {
     $itemId = $_POST['item_id'];
@@ -14,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "Produkten har tagits bort!";
     exit;
   } else {
+// Uppdaterar 
     $itemId = $_POST['item_id'];
     $name = $_POST['name'];
     $price = $_POST['price'];
@@ -49,11 +52,11 @@ if (isset($_GET['item_id'])) {
   <html>
   <head>
     <title>Redigera produkt</title>
-  <link rel="stylesheet" href="css/item.css">
+    <link rel="stylesheet" href="css/item.css">
   </head>
   <body>
-    <h1>Redigera produkt</h1>
     <a href="list-items.php" class="back-btn">Tillbaka</a>
+    <h1>Redigera produkt</h1>
     <div class="form-container">
       <form method="POST">
         <input type="hidden" name="item_id" value="<?php echo $itemId; ?>">
@@ -65,10 +68,9 @@ if (isset($_GET['item_id'])) {
         <input type="text" name="price" id="price" value="<?php echo $price; ?>" required>
 
         <label for="sold">Såld:</label>
-        <select name="sold" id="sold">
-          <option value="0" <?php echo $sold == 0 ? 'selected' : ''; ?>>Nej</option>
-          <option value="1" <?php echo $sold == 1 ? 'selected' : ''; ?>>Ja</option>
-        </select>
+        <div class="checkbox-container">
+          <input type="checkbox" name="sold" id="sold" <?php echo $sold == 1 ? 'checked' : ''; ?>>
+        </div>
 
         <button type="submit">Spara ändringar</button>
         <button type="submit" name="delete" class="delete-btn">Ta bort plagg</button>

@@ -22,13 +22,13 @@ if (isset($_GET['seller_id'])) {
     $seller = $sellerStatement->fetch(PDO::FETCH_ASSOC);
 
     if ($seller) {
-        ?>
+?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Säljarinformation</title>
-        <link rel="stylesheet" href="css/seller-info.css">
+    <link rel="stylesheet" href="css/seller-info.css">
 </head>
 <body>
     <a class="back-button" href="list-sellers.php">Tillbaka</a>
@@ -38,15 +38,13 @@ if (isset($_GET['seller_id'])) {
         <p>Antal inlämnade plagg: <?php echo $seller['total_items_submitted']; ?> st</p>
         <p>Antal sålda plagg: <?php echo $seller['total_items_sold']; ?> st</p>
         <p>Totalt sålt för: <?php echo $seller['total_sales_amount']; ?> kr</p>
-        <!-- Lägg till knappen bredvid säljarens information -->
-<form action="delete-seller.php" method="POST">
-  <input type="hidden" name="seller_id" value="<?php echo $seller['seller_id']; ?>">
-  <button type="submit">Ta bort säljare</button>
-</form>
-
+        <form action="delete-seller.php" method="POST">
+            <input type="hidden" name="seller_id" value="<?php echo $seller['seller_id']; ?>">
+            <button type="submit" class="delete-button">Ta bort säljare</button>
+        </form>
 
         <?php
-        // Hämta alla plagg som säljaren lämnat in
+        // Hämtar alla plagg som säljaren lämnat in
         $itemsStatement = $pdo->prepare("SELECT * FROM items WHERE seller_id = :seller_id");
         $itemsStatement->bindParam(":seller_id", $seller_id);
         $itemsStatement->execute();
@@ -54,14 +52,16 @@ if (isset($_GET['seller_id'])) {
 
         if (count($items) > 0) {
             echo "<h3>Plagg inlämnade av " . $seller['name'] . "</h3>";
-            foreach ($items as $item) {
-                echo "<p>Produkt ID: " . $item['item_id'] . "</p>";
-                echo "<p>Produkt namn: " . $item['name'] . "</p>";
-                echo "<p>Inlämmnat: " . $item['submitted_date'] . "</p>";
-                echo "<p>Såld: " . ($item['sold'] ? 'Ja' : 'Nej') . "</p>";
-                echo "<p>Pris: " . $item['price'] . "</p>";
-                echo "<br>";
-            }
+             foreach ($items as $item): ?>
+                <div class="item-container">
+                    <p>Produkt ID: <?php echo $item['item_id']; ?></p>
+                    <p>Produkt namn: <?php echo $item['name']; ?></p>
+                    <p>Inlämmnat: <?php echo $item['submitted_date']; ?></p>
+                    <p>Såld: <?php echo ($item['sold'] ? 'Ja' : 'Nej'); ?></p>
+                    <p>Pris: <?php echo $item['price']; ?></p>
+                    <br>
+                </div>
+            <?php endforeach;
         } else {
             echo "<h3>Inga plagg inlämnade av " . $seller['name'] . "</h3>";
         }
@@ -70,9 +70,7 @@ if (isset($_GET['seller_id'])) {
 </body>
 </html>
 
-
-
-        <?php
+<?php
     } else {
         echo "<h1>Säljaren hittades inte.</h1>";
     }

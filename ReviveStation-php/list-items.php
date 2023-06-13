@@ -5,9 +5,16 @@ $pdo = new PDO('mysql:host=localhost;dbname=revivestation;charset=utf8', 'root',
 
 // Uppdatera sold-status om formuläret har skickats
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  foreach ($_POST['sold'] as $itemId) {
-    $stmt = $pdo->prepare("UPDATE items SET sold = 1 WHERE item_id = ?");
-    $stmt->execute([$itemId]);
+  if (isset($_POST['update'])) {
+    $soldItems = isset($_POST['sold']) ? $_POST['sold'] : [];
+
+    $stmt = $pdo->prepare("UPDATE items SET sold = 0");
+    $stmt->execute();
+
+    foreach ($soldItems as $itemId) {
+      $stmt = $pdo->prepare("UPDATE items SET sold = 1 WHERE item_id = ?");
+      $stmt->execute([$itemId]);
+    }
   }
 }
 
@@ -22,6 +29,8 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link rel="stylesheet" href="css/list-item.css">
 </head>
 <body>
+  <a href="index.php" class="back-to-menu">Tillbaka till menyn</a>
+
   <h1>Plagglista</h1>
   <form method="POST">
     <table>
@@ -30,6 +39,7 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <th>Namn</th>
           <th>Säljare</th>
           <th>Inlämningsdatum</th>
+          <th>Pris</th>
           <th>Såld</th>
           <th>Åtgärder</th>
         </tr>
@@ -40,6 +50,7 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td><?php echo $item['name']; ?></td>
             <td><?php echo $item['seller_name']; ?></td>
             <td><?php echo $item['submitted_date']; ?></td>
+            <td><?php echo $item['price']; ?></td>
             <td>
               <input type="checkbox" name="sold[]" value="<?php echo $item['item_id']; ?>" <?php echo $item['sold'] ? 'checked' : ''; ?>>
             </td>
@@ -50,7 +61,7 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endforeach; ?>
       </tbody>
     </table>
-    <button type="submit">Uppdatera</button>
+    <button type="submit" name="update">Uppdatera</button>
   </form>
 </body>
 </html>
