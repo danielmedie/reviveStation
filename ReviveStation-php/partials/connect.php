@@ -1,41 +1,15 @@
 <?php
-class DatabaseConnection {
-    private $host = 'localhost';
-    private $dbname = 'revivestation';
-    private $user = 'root';
-    private $password = 'abc123';
-    private $pdo;
+$host = 'localhost';
+$dbname = 'revivestation';
+$username = 'root';
+$password = 'abc123';
 
-    public function __construct() {
-        $this->connect();
-    }
+$dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
 
-    private function connect() {
-    
-        $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
-
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ];
-
-        try {
-   
-            $this->pdo = new PDO($dsn, $this->user, $this->password, $options);
-        } catch (PDOException $e) {
-            die('Connection failed: ' . $e->getMessage());
-        }
-    }
-
-    public function getPdo() {
-        return $this->pdo;
-    }
+try {
+    $pdo = new PDO($dsn, $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die('Anslutningen misslyckades: ' . $e->getMessage());
 }
-
-
-$database = new DatabaseConnection();
-
-
-$pdo = $database->getPdo();
 ?>

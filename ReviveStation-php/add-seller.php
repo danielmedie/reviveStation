@@ -16,17 +16,16 @@ class Seller {
     }
 }
 
-// Skapar en instans av Seller-klassen och skickar med PDO-objektet
+// Skapar en instans
 $seller = new Seller($pdo);
 
-// Kontrollerar om förfrågan skickades med POST-metoden
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     
     // Anropar addSeller-metoden för att lägga till säljaren i databasen
     $seller->addSeller($name);
     
-    // Visar ett meddelande efter att säljaren har lagts till
     echo "Säljaren har lagts till!";
 }
 ?>

@@ -54,7 +54,7 @@ $sellers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </form>
 
 <?php
-// Sanera inmatad data
+
 function sanitizeInput($input)
 {
     $sanitizedInput = trim($input);

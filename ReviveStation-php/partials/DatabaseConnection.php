@@ -8,7 +8,7 @@ class DatabaseConnection {
 
     public function __construct() {
         $this->connect();
-    }
+    }     
 
     private function connect() {
         $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;  
@@ -19,10 +19,9 @@ class DatabaseConnection {
         ];
 
         try {
-            // Skapar en ny PDO-anslutning 
+            
             $this->pdo = new PDO($dsn, $this->user, $this->password, $options);
         } catch (PDOException $e) {
-            // Mer noga felmeddlande vid SQL frågor eller anslutnig till databas
             die('Connection failed: ' . $e->getMessage());
         }
     }

@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['seller_id'])) {
         <p><strong>Antal inlämnade plagg:</strong> <?php echo $totalItemsSubmitted; ?> st</p>
         <p><strong>Antal sålda plagg:</strong> <?php echo $totalItemsSold; ?> st</p>
         <p><strong>Totalt sålt för:</strong> <?php echo $totalSalesAmount; ?> kr</p>
-        <form method="POST" action="delete-seller.php">
+        <form method="POST" action="seller-info.php">
             <input type="hidden" name="seller_id" value="<?php echo $seller['seller_id']; ?>">
             <button type="submit" class="delete-button">Ta bort säljare</button>
         </form>
