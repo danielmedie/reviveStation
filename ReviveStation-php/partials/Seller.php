@@ -46,15 +46,4 @@ class Seller
         return $result['total_sales_amount'];
     }
 
-    public function getTopSellers()
-    {
-        $stmt = $this->pdo->query("SELECT sellers.*, COUNT(items.item_id) AS total_items_sold
-            FROM sellers
-            INNER JOIN items ON sellers.seller_id = items.seller_id
-            WHERE items.sold = 1
-            GROUP BY sellers.seller_id
-            ORDER BY total_items_sold DESC
-            LIMIT 3");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
 }
